@@ -11,11 +11,13 @@ metadata = {
 def run(ctx: protocol_api.ProtocolContext):
     # LABWARE
     plate = ctx.load_labware("nest_96_wellplate_100ul_pcr_full_skirt", 8)
+    plate.set_offset(x=0.00, y=2.00, z=0.00)
     tube_rack = ctx.load_labware("opentrons_24_tuberack_nest_1.5ml_snapcap", 11)
+    tube_rack.set_offset(x=0.00, y=2.00, z=2.00)
     tiprack = ctx.load_labware("opentrons_96_tiprack_20ul", 9)
 
     # PIPETA
-    pipette = ctx.load_instrument("p20_single_gen2", mount="right", tip_racks=[tiprack])
+    pipette = ctx.load_instrument("p20_single_gen2", "right", tip_racks=[tiprack])
 
     # FUENTE DE DMSO
     fuente = tube_rack.wells_by_name()["A1"]
@@ -33,7 +35,7 @@ def run(ctx: protocol_api.ProtocolContext):
     # PASO 2: Diluciones desde fila A hacia H en cada columna
     for col in plate.columns():
         pipette.pick_up_tip()
-        for i in range(0, 7):  # desde fila A (0) a G (6)
+        for i in range(0, 7):  # desde fila A (0) a H (7)
             origen = col[i]
             destino = col[i + 1]
             pipette.aspirate(5, origen)
